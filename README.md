@@ -125,3 +125,42 @@ echo "Process completed. Check the outputs directory for results."
 This script ensures all necessary directories exist and handles the Docker build and run process automatically.
 
 [Rest of the documentation continues...]
+
+
+## Challenges Encountered
+
+### Multiple Quotation Types in Orders
+The `orders.csv` file contained multiple types of quotation marks that made reading the data challenging. This required additional transformations and data preparation steps to properly process the data for the tasks.
+
+### Structure Mismatch in Invoicing Data
+The JSON structure of the invoicing data was not compatible with the initial schema design. To develop a simple and effective solution, I opted to:
+1. Read the data as a dictionary
+2. Remove the 'data' key from the JSON structure
+3. Convert it to a DataFrame format for further processing
+
+### Package References and Testing Utilities
+In an effort to make the project as production-ready as possible and demonstrate best practices, I created a `utils.py` file containing the `DataFrameTestUtils` class for DataFrame comparisons in tests. However, I encountered several challenges:
+
+1. The `setup.py` configuration wasn't correctly locating the utility module
+2. Tests weren't properly importing the utilities
+3. Due to time constraints, I temporarily duplicated the comparison code in each test file
+
+While this solution introduces code duplication, it was a pragmatic choice to ensure functionality. A future improvement would be to properly configure the package structure and imports.
+
+### Docker Path Management
+Working primarily in a local environment and having limited recent Docker experience, managing file paths within the Docker container proved challenging. The current approach to handling file paths involves:
+
+1. Using environment variables in the Docker container
+2. Mounting volumes for output persistence
+3. Configuring the PYTHONPATH appropriately
+
+While the current solution works, there might be room for improvement in terms of:
+- Path abstraction
+- Configuration management
+- Environment-specific path handling
+
+### Areas for Future Improvement
+1. Implement proper package structure for utilities
+2. Refactor tests to use a common utilities package
+3. Implement more robust path handling in Docker
+4. Add configuration files for different environments

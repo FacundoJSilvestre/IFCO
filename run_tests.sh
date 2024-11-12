@@ -14,7 +14,7 @@ python -m pytest test/ -v
 if [ $? -eq 0 ]; then
     echo "Tests passed successfully. Running tasks..."
     
-    # Ejecutar tasks en secuencia
+    # Execute the task secuencially.
     python task_1.py
     if [ $? -eq 0 ]; then
         python task_2.py

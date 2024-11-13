@@ -25,7 +25,7 @@ COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
 # Create the folder outputs if not exists
-RUN mkdir -p /app/data-engineering-test/source/outputs
+RUN mkdir -p /app/source/outputs
 
 # Copy all the files
 COPY . .
@@ -34,7 +34,7 @@ COPY . .
 RUN pip install -e .
 
 # Config PYTHONPATH 
-ENV PYTHONPATH="/app/data-engineering-test/source:${PYTHONPATH}"
+ENV PYTHONPATH="/app/source:${PYTHONPATH}"
 
 # Give permissions to run the script
 RUN chmod +x run_tests.sh
@@ -43,7 +43,7 @@ RUN chmod +x run_tests.sh
 ENV MPLBACKEND=Agg
 
 # Volume for checking output results
-VOLUME ["/app/data-engineering-test/source/outputs"]
+VOLUME ["/app/source/outputs"]
 
 # Run the Tests and the Tasks
 CMD ["./run_tests.sh"]

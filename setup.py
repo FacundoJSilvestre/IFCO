@@ -7,8 +7,8 @@ here = os.path.abspath(os.path.dirname(__file__))
 setup(
     name="data-engineering-test",
     version="0.1",
-    package_dir={"": "data-engineering-test"},
-    packages=find_packages(where="data-engineering-test"),
+    package_dir={"": "source"},
+    packages=find_packages(where="source"),
     include_package_data=True,
     install_requires=[
         "pyspark>=3.5.3",

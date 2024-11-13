@@ -1,10 +1,10 @@
 #!/bin/bash
 
-# Establecer que el script falle si hay algún error
+# Set the scripts fails in case of an error.
 set -e
 
-# Directorio de trabajo
-cd /app/data-engineering-test/source
+# Work Directory
+cd /app/source
 
 # Ejecutar todos los tests
 echo "Running tests..."
@@ -14,7 +14,7 @@ python -m pytest test/ -v
 if [ $? -eq 0 ]; then
     echo "Tests passed successfully. Running tasks..."
     
-    # Ejecutar tasks en secuencia
+    # Execute the task secuencially.
     python task_1.py
     if [ $? -eq 0 ]; then
         python task_2.py

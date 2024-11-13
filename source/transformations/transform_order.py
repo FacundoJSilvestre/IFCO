@@ -10,13 +10,21 @@ schema_contact = T.ArrayType(T.StructType([
 ]))
 
 def transform_orders(df:DataFrame) -> DataFrame:
-    """Convert orders Dataframe from the CSV into a format one.
+    """Transform orders Dataframe from read dataframe CSV into a formated one.
 
     Args:
         df (DataFrame): orders.csv
 
     Returns:
         DataFrame columns:
+            - order_id (string): Unique identifier for the order
+            - date (string): Date when the order was created
+            - company_id (string): Unique identifier for the company
+            - company_name (string): Name of the company
+            - crate_type (string): Type of crate used in the order
+            - contact_full_name (string): Full name of the contact person (non-null)
+            - contact_address (string): Contact's address (non-null)
+            - salesowners (string): Sales owner assigned to the order
 
     """
     #Clean the dataset.
@@ -46,10 +54,9 @@ def transform_orders(df:DataFrame) -> DataFrame:
             F.lit(" "),
             F.coalesce(F.col("exploded_json.contact_surname"), F.lit("Doe"))
         ).alias("contact_full_name"),
-        
         F.concat(
             F.coalesce(F.col("exploded_json.city"), F.lit("Unknown")),
-            F.lit(", "),
+            F.lit(" "),
             F.coalesce(F.col("exploded_json.cp"), F.lit("UNK00")).cast("string")
         ).alias("contact_address"),
         "salesowners"

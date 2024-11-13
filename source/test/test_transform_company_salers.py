@@ -2,6 +2,10 @@ import unittest
 from pyspark.sql import SparkSession, DataFrame
 from pyspark.sql import types as T
 from transformations.transform_order import transform_orders
+from transformations.transform_invoicing import trasnform_invoices
+from transformations.transform_orders_invoicing import transform_orders_invoices
+from transformations.transform_company_salers import transformation_company_sales
+import os
 from chispa.dataframe_comparer import assert_df_equality
 
 class DataFrameTestUtils:
@@ -20,8 +24,13 @@ class DataFrameTestUtils:
 class TransformOrdersTestCase(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
-        cls.spark = SparkSession.builder.appName("test_transformation_orders").getOrCreate()
-        
+        cls.spark = SparkSession.builder.appName("test_transformation_invoicing").getOrCreate()
+        # Read test_invoicing_data and create df_invoicing
+        cls.file_path = os.path.abspath(__file__)
+        cls.father_path = os.path.dirname(cls.file_path)
+        cls.json_path = os.path.join(cls.father_path, 'test_invoicing_data.json')
+        cls.df_invoicing = trasnform_invoices(cls.json_path, cls.spark)
+        # Create df_orders
         cls.data = [
             (
                 "f47ac10b-58cc-4372-a567-0e02b2c3d479",  # order_id
@@ -44,32 +53,24 @@ class TransformOrdersTestCase(unittest.TestCase):
             "salesowners"
         ]
         
+        # Create DataFrame Orders
+        cls.df_orders = cls.spark.createDataFrame(cls.data, schema=cls.columns)
+        cls.df_orders = transform_orders(cls.df_orders)
+        
         # Create DataFrame
-        cls.df = cls.spark.createDataFrame(cls.data, schema=cls.columns)
-        cls.df = transform_orders(cls.df)
-        
+        cls.df = transform_orders_invoices(cls.df_orders, cls.df_invoicing)
+        cls.df = transformation_company_sales(cls.df)
+
+        # Create Expected DataFrame
         cls.schema = T.StructType([
-            T.StructField("order_id", T.StringType(), True),
-            T.StructField("date", T.StringType(), True),
-            T.StructField("company_id", T.StringType(), True),
             T.StructField("company_name", T.StringType(), True),
-            T.StructField("crate_type", T.StringType(), True),
-            T.StructField("contact_full_name", T.StringType(), False),
-            T.StructField("contact_address", T.StringType(), False),
-            T.StructField("salesowners", T.StringType(), True)
+            T.StructField("salers", T.StringType(), False)
         ])
-        
+
         cls.df_expected = cls.spark.createDataFrame(
-            [{
-                "order_id": "f47ac10b-58cc-4372-a567-0e02b2c3d479",
-                "date": "29.01.22",
-                "company_id": "1e2b47e6-499e-41c6-91d3-09d12dddfbbd",
-                "company_name": "Fresh Fruits Co",
-                "crate_type": "Plastic",
-                "contact_full_name": "Curtis Jackson",
-                "contact_address": "Chicago 12345",
-                "salesowners": "Leonard Cohen, Luke Skywalker, Ammy Winehouse"
-            }],
+            [
+                {"company_name":"fresh fruits","salers":"Leonard Cohen,  Luke Skywalker,  Ammy Winehouse"}
+            ],
             schema=cls.schema
         )
 

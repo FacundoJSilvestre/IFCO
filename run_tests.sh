@@ -1,10 +1,10 @@
 #!/bin/bash
 
-# Establecer que el script falle si hay algún error
+# Set the scripts fails in case of an error.
 set -e
 
-# Directorio de trabajo
-cd /app/data-engineering-test/source
+# Work Directory
+cd /app/source
 
 # Ejecutar todos los tests
 echo "Running tests..."

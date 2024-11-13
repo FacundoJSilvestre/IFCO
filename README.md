@@ -14,16 +14,16 @@ IFCO/
     ├── resources/                  # Input data files
         ├── invoicing_data.json     # Invoice data
         ├── orders.csv             # Orders data
-    ├── source/                    # Source code directory
-        ├── outputs/               # Generated output files
-        ├── test/                  # Test files
-            ├── __init__.py
-            ├── test_*.py          # Various test files for each transformation
-        ├── transformations/       # Data transformation modules
-            ├── __init__.py
-            ├── transform_*.py     # Various transformation implementations
-        ├── utils.py              # Utility functions
-    ├── task_*.py                 # Task implementation files
+├── source/                    # Source code directory
+    ├── outputs/               # Generated output files
+    ├── test/                  # Test files
+        ├── __init__.py
+        ├── test_*.py          # Various test files for each transformation
+    ├── transformations/       # Data transformation modules
+        ├── __init__.py
+        ├── transform_*.py     # Various transformation implementations
+    ├── utils.py              # Utility functions
+├── task_*.py                 # Task implementation files
 ├── Dockerfile                    # Docker configuration
 ├── requirements.txt              # Python dependencies
 ├── run-docker.sh                # Docker execution script

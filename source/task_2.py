@@ -5,7 +5,7 @@ from transformations.transform_order import transform_orders
 
 def main():
     # Create spark session for this test.
-    spark = SparkSession.builder.appName("task1").getOrCreate()
+    spark = SparkSession.builder.appName("task2").getOrCreate()
     # Set the path for reading the file.
     current_path = os.path.abspath(__file__)
     father_path = os.path.dirname(current_path)
@@ -16,10 +16,10 @@ def main():
     # Tranform the orders for the desire schema.
     df_final = transform_orders(df)
 
-    # Task 1 
-    df_final = df_final.groupBy("company_id", "crate_type").agg(F.count("order_id").alias("order_count"))
+    # Task 2
+    df_final = df_final.select('order_id', 'contact_full_name')
     # Define the route of the output.
-    csv_final_path = os.path.join(rooth_path, 'source/outputs/task1.csv')
+    csv_final_path = os.path.join(rooth_path, 'source/outputs/task2.csv')
     # write the dataframe into csv
     df_final.write.mode("overwrite").csv(csv_final_path, header=True)
 

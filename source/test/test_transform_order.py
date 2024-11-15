@@ -54,8 +54,8 @@ class TransformOrdersTestCase(unittest.TestCase):
             T.StructField("company_id", T.StringType(), True),
             T.StructField("company_name", T.StringType(), True),
             T.StructField("crate_type", T.StringType(), True),
-            T.StructField("contact_full_name", T.StringType(), False),
-            T.StructField("contact_address", T.StringType(), False),
+            T.StructField("contact_full_name", T.StringType(), True),
+            T.StructField("contact_address", T.StringType(), True),
             T.StructField("salesowners", T.StringType(), True)
         ])
         

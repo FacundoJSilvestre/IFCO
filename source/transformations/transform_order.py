@@ -42,6 +42,13 @@ def transform_orders(df:DataFrame) -> DataFrame:
         "exploded_json",
         F.explode_outer(F.col("parsed_json"))
         )
+    
+    df = (df
+          .withColumn("contact_name", F.when(F.col("exploded_json.contact_name").isNull(),"John").otherwise(F.col("exploded_json.contact_name")))
+          .withColumn("contact_surname", F.when(F.col("exploded_json.contact_surname").isNull(),"Doe").otherwise(F.col("exploded_json.contact_surname")))
+          .withColumn("city", F.when(F.col("exploded_json.city").isNull(),"Unknown").otherwise(F.col("exploded_json.city")))
+          .withColumn("cp", F.when(F.col("exploded_json.cp").isNull(),"UNK00").otherwise(F.col("exploded_json.cp")))
+          )
     # Select final columns and create the columns contact_full_name & contact_address.
     df_final = df.select(
         "order_id",
@@ -49,16 +56,22 @@ def transform_orders(df:DataFrame) -> DataFrame:
         "company_id",
         "company_name",
         "crate_type",
-        F.concat(
-            F.coalesce(F.col("exploded_json.contact_name"), F.lit("John")),
-            F.lit(" "),
-            F.coalesce(F.col("exploded_json.contact_surname"), F.lit("Doe"))
-        ).alias("contact_full_name"),
-        F.concat(
-            F.coalesce(F.col("exploded_json.city"), F.lit("Unknown")),
-            F.lit(" "),
-            F.coalesce(F.col("exploded_json.cp"), F.lit("UNK00")).cast("string")
-        ).alias("contact_address"),
+        "contact_name",
+        "contact_surname",
+        "city",
+        "cp",
+        F.concat(F.col("company_name"), F.lit(" "), F.col("contact_surname")).alias("contact_full_name"),
+        F.concat(F.col("city"), F.lit(" "), F.col("cp")).alias("contact_address"),
+        # F.concat(
+        #     F.coalesce(F.col("exploded_json.contact_name"), F.lit("John")),
+        #     F.lit(" "),
+        #     F.coalesce(F.col("exploded_json.contact_surname"), F.lit("Doe"))
+        # ).alias("contact_full_name"),
+        # F.concat(
+        #     F.coalesce(F.col("exploded_json.city"), F.lit("Unknown")),
+        #     F.lit(" "),
+        #     F.coalesce(F.col("exploded_json.cp"), F.lit("UNK00")).cast("string")
+        # ).alias("contact_address"),
         "salesowners"
     )
     return df_final
